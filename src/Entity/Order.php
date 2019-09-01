@@ -9,6 +9,19 @@ use Doctrine\ORM\Mapping as ORM;
  */
 
 class Order {
+
+    const STATUS_CREATED = 'created';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_DELIVERED = 'delivered';
+    const STATUS_CANCELED = 'canceled';
+
+    const ALLOWED_STATUSES = [
+        self::STATUS_CREATED,
+        self::STATUS_CONFIRMED,
+        self::STATUS_DELIVERED,
+        self::STATUS_CANCELED
+    ];
+
     /**
     *@ORM\Column(type="integer")
     *@ORM\Id
@@ -45,7 +58,14 @@ class Order {
     /**
      *@param mixed $status
      */
-    public function setName($status){
+    public function setStatus($status){
         $this->status = $status;
+    }
+
+    public function toArray(){
+        return [
+            'id' => $this->id,
+            'status' => $this->status
+        ];
     }
 }
