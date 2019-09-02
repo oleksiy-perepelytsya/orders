@@ -2,8 +2,10 @@
 namespace App\Tests\Controller\API;
 
 use App\Controller\API\OrderController;
+use Symfony\Component\HttpFoundation\Response;
 use App\Entity\Order;
 use PHPUnit\Framework\TestCase;
+use GuzzleHttp\Client;
 
 class OrderControllerTest extends TestCase
 {
@@ -12,7 +14,7 @@ class OrderControllerTest extends TestCase
      */
     public function testOrderCreation()
     {
-        $client = new \GuzzleHttp\Client([
+        $client = new Client([
             'base_uri' => 'http://test-task.com:80',
             'defaults' => [
                 'exceptions' => false
@@ -25,7 +27,7 @@ class OrderControllerTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $responseBodyArray = json_decode($response->getBody(true), true);
         $this->assertArrayHasKey('id', $responseBodyArray);
@@ -40,7 +42,7 @@ class OrderControllerTest extends TestCase
      */
     public function testOrderStatus($resourceId)
     {
-        $client = new \GuzzleHttp\Client([
+        $client = new Client([
             'base_uri' => 'http://test-task.com:80',
             'defaults' => [
                 'exceptions' => false
@@ -49,7 +51,7 @@ class OrderControllerTest extends TestCase
 
         $response = $client->get("/order/{$resourceId}");
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $responseBodyArray = json_decode($response->getBody(true), true);
         $this->assertArrayHasKey('resource', $responseBodyArray);
@@ -66,7 +68,7 @@ class OrderControllerTest extends TestCase
      */
     public function testOrderCanceling($resourceId)
     {
-        $client = new \GuzzleHttp\Client([
+        $client = new Client([
             'base_uri' => 'http://test-task.com:80',
             'defaults' => [
                 'exceptions' => false
@@ -75,7 +77,7 @@ class OrderControllerTest extends TestCase
 
         $response = $client->get("/order/{$resourceId}/status/" . Order::STATUS_CANCELED);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         return $resourceId;
     }
@@ -87,7 +89,7 @@ class OrderControllerTest extends TestCase
      */
     public function testOrderStatusCanceled($resourceId)
     {
-        $client = new \GuzzleHttp\Client([
+        $client = new Client([
             'base_uri' => 'http://test-task.com:80',
             'defaults' => [
                 'exceptions' => false
@@ -96,7 +98,7 @@ class OrderControllerTest extends TestCase
 
         $response = $client->get("/order/{$resourceId}");
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $responseBodyArray = json_decode($response->getBody(true), true);
 
